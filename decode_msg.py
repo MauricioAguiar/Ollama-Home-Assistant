@@ -12,7 +12,7 @@ openapi.connect(USERNAME, PASSWORD, "1", "smartlife")
 
 # Caminhos dos arquivos JSON
 DEVICE_FILE = "devices.json"
-POSITIONS_FILE = "positions.json"
+LOCATIONS_FILE = "locations.json"
 DEVICE_TYPES_FILE = "device_types.json"
 
 # Função para carregar JSON genérico
@@ -28,7 +28,7 @@ def save_json(file_path, data):
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 # Função para configurar luz piscante
-def set_blinking_light(device_id, hue, saturation, brightness, duration, blink_interval):
+def set_light(device_id, hue, saturation, brightness, duration, blink_interval):
     light_command = {
         'commands': [
             {'code': 'color_set', 'value': {'h': hue, 's': saturation, 'v': brightness}}
@@ -43,13 +43,14 @@ def set_blinking_light(device_id, hue, saturation, brightness, duration, blink_i
         openapi.post(f'/v1.0/devices/{device_id}/commands', off_command)
         time.sleep(blink_interval)
 
-# Função para ligar ou desligar dispositivos por localização
-def toggle_devices_by_location(location, action):
+# Função genérica para alternar dispositivos com base em critérios
+def toggle_devices(filter_key, filter_value, action):
     devices = load_json(DEVICE_FILE, {"devices": []})["devices"]
     found = False
 
     for device in devices:
-        if device["position"] == location:
+
+        if device.get(filter_key).strip().lower() == filter_value.lower().strip():
             found = True
             device_type = device["type"]
             command = None
@@ -63,26 +64,30 @@ def toggle_devices_by_location(location, action):
 
             if command:
                 openapi.post(f'/v1.0/devices/{device["id"]}/commands', command)
-                print(f"O dispositivo {device['id']} ({device_type}) em {location} mudou o status de ligado para {action}")
+                print(f"O dispositivo {device['id']} ({device_type}) com {filter_key} = {filter_value.strip()} mudou o status para {action}")
 
     if not found:
-        print(f"Nenhum dispositivo encontrado na localização '{location}'.")
+        print(f"Nenhum dispositivo encontrado com {filter_key} = '{filter_value}'.")
+
+# Função para ligar ou desligar dispositivos por tipo
+def toggle_devices_by_type(device_type, action):
+    toggle_devices("type", device_type, action)
+    
+# Exemplo de uso para nome personalizado
+def toggle_devices_by_custom_name(custom_name, action):
+    toggle_devices("custom_name", custom_name, action)
+    
+# Exemplo de uso para localização
+def toggle_devices_by_location(location, action):
+    toggle_devices("location", location, action)
 
 # Mapeamento de ações para funções
 action_map = {
-    "set_blinking_light": set_blinking_light,
-    "toggle_devices_by_location": toggle_devices_by_location
+    "set_blinking_light": set_light,
+    "toggle_devices_by_location": toggle_devices_by_location,
+    "toggle_devices_by_custom_name" : toggle_devices_by_custom_name,
+    "toggle_devices_by_type" : toggle_devices_by_type
 }
-
-# Teste de integração com o TuyaSmart
-def ligar_tomada():
-    device_id = "eb9610e0090907ba73eh5f"  # ID do dispositivo listado
-    tuya_command = {
-    "commands": [{"code": "switch_1", "value": False}]  # Liga o dispositivo
-    }
-    openapi.post(f"/v1.0/devices/{device_id}/commands", tuya_command)
-    print(f"Comando enviado para o dispositivo {device_id}")
-    print ("Teste bem sucedido ate agr")
 
 # Função para processar JSON e executar a ação
 def process_command(json_command):
@@ -104,7 +109,7 @@ def process_command(json_command):
 # Exemplo de JSON recebido
 json_input = '''
 {
-    "action": "set_blinking_light",
+    "action": "set_light",
     "parameters": {
         "device_id": "id_do_dispositivo",
         "hue": 0,
@@ -117,19 +122,22 @@ json_input = '''
 '''
 
 # Processar e executar o comando
-process_command(json_input)
+# process_command(json_input)
 
 # Exemplo de JSON para ligar todos os dispositivos em uma localização
 json_toggle = '''
 {
-    "action": "toggle_devices_by_location",
+    "action": "toggle_devices_by_custom_name",
     "parameters": {
-        "location": "cozinha",
+        "custom_name": "tomada",
         "action": false
     }
 }
 '''
 
 # Processar e executar o comando
+   
+
 process_command(json_toggle)
+
 #ligar_tomada()

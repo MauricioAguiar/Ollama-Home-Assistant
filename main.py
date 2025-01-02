@@ -4,6 +4,7 @@ import webbrowser
 import time
 from datetime import datetime, timedelta
 from tuya_iot import TuyaOpenAPI
+
 from env import ENDPOINT, ACCESS_ID, ACCESS_KEY, USERNAME, PASSWORD
 
 # Configurações do Tuya API

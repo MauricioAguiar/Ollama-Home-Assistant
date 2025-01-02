@@ -60,3 +60,4 @@ dmypy.json
 *.bak
 *.swp
 *.tmp
+env.py

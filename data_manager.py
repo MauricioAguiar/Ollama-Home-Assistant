@@ -61,7 +61,8 @@ def list_devices():
     for device in devices:
         print(f"ID: {device['id']}, Tipo: {device['type']}, Localização: {device['location']}, Nome Personalizado: {device['custom_name']}")
 
-# Exemplo de uso
+'''
+# Setup inicial
 if __name__ == "__main__":
     # Adicionar tipos de dispositivos e localizações iniciais
     save_json(DEVICE_TYPES_FILE, {"types": ["light", "outlet", "camera", "smartlock"]})
@@ -73,3 +74,4 @@ if __name__ == "__main__":
 
     # Listar dispositivos
     list_devices()
+'''
