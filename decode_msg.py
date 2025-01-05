@@ -14,6 +14,7 @@ openapi.connect(USERNAME, PASSWORD, "1", "smartlife")
 DEVICE_FILE = "devices.json"
 LOCATIONS_FILE = "locations.json"
 DEVICE_TYPES_FILE = "device_types.json"
+COMMANDS_FILE = "commands.json"
 
 # Função para carregar JSON genérico
 def load_json(file_path, default_data):
@@ -80,14 +81,20 @@ def toggle_devices_by_custom_name(custom_name, action):
 # Exemplo de uso para localização
 def toggle_devices_by_location(location, action):
     toggle_devices("location", location, action)
+    
+def other_response():
+    return NotImplemented
 
 # Mapeamento de ações para funções
 action_map = {
-    "set_blinking_light": set_light,
+    "set_light": set_light,
     "toggle_devices_by_location": toggle_devices_by_location,
     "toggle_devices_by_custom_name" : toggle_devices_by_custom_name,
-    "toggle_devices_by_type" : toggle_devices_by_type
+    "toggle_devices_by_type" : toggle_devices_by_type,
+    "other_response" : other_response
 }
+
+
 
 # Função para processar JSON e executar a ação
 def process_command(json_command):
@@ -136,8 +143,22 @@ json_toggle = '''
 '''
 
 # Processar e executar o comando
-   
 
-process_command(json_toggle)
+def list_devices():
+    return load_json(DEVICE_FILE, {"devices": []})["devices"]
 
+def list_locations():
+    return load_json(LOCATIONS_FILE, {"locations" :[]})["locations"]
+
+def list_devices_type():
+    return load_json(DEVICE_TYPES_FILE, {"types": []})["types"] 
+
+def list_commands():
+    return load_json(COMMANDS_FILE, {"commands": []})["commands"] 
+
+
+#process_command(json_toggle)
+
+
+#print (list_commands())
 #ligar_tomada()
