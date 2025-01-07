@@ -16,7 +16,7 @@ openapi.connect(USERNAME, PASSWORD, "1", "smartlife")
 
 # Inicializar o mecanismo de fala
 engine = pyttsx3.init()
-engine.setProperty("rate", 150)  # Velocidade da fala
+engine.setProperty("rate", 250)  # Velocidade da fala
 engine.setProperty("volume", 0.9)  # Volume (0.0 a 1.0)
 
 # Lista de tarefas

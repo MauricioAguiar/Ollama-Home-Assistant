@@ -2,7 +2,7 @@ from ollama import chat
 from ollama import ChatResponse
 import decode_msg
 
-user_input = "Turn on the smart plug"
+user_input = "Do not turn the lights off"
 
 response: ChatResponse = chat(
   model="llama3.2",                               
@@ -31,3 +31,5 @@ print(response['message']['content'])
 #print(response.message.content)
 
 decode_msg.save_json("response.json", response['message']['content'])
+
+msg_reader = decode_msg.load_json("response.json" , {"message": []})["message"]
