@@ -61,3 +61,7 @@ dmypy.json
 *.swp
 *.tmp
 env.py
+
+**/__pycache__/**
+*.wav
+audio/*

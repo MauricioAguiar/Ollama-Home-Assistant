@@ -41,4 +41,4 @@ def piper_speak(text):
 
 # Exemplo de uso
 if __name__ == "__main__":
-    piper_speak("Who do you think you are to give me any commands?")
+    piper_speak("Waaaaaait! Who do you think you are to give me any commands?")

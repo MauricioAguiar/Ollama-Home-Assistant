@@ -26,7 +26,7 @@ def load_json(file_path, default_data):
 # Função para salvar JSON genérico
 def save_json(file_path, data):
     with open(file_path, "w", encoding="utf-8") as file:
-        json.dump(data, file, ensure_ascii=False, indent=4)
+        json.dump(data, file, indent=4, ensure_ascii=False)
 
 # Função para configurar luz piscante
 def set_light(device_id, hue, saturation, brightness, duration, blink_interval):
@@ -51,7 +51,7 @@ def toggle_devices(filter_key, filter_value, action):
 
     for device in devices:
 
-        if device.get(filter_key).strip().lower() == filter_value.lower().strip():
+        if device.get(filter_key).strip().lower() == filter_value.lower().strip() | device.get(filter_key).strip().lower() == "all" :
             found = True
             device_type = device["type"]
             command = None
